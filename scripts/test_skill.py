@@ -38,7 +38,7 @@ print("\n[SKILL.md 内容检查]")
 with open(os.path.join(SKILL_DIR, "SKILL.md"), "r", encoding="utf-8") as f:
     skill = f.read()
 
-check("name: nanchang-carpoly", "nanchang-carpoly" in skill)
+check("name: 南昌嘉宝莉", "南昌嘉宝莉" in skill)
 check("包含场景一~九", all(f"场景{i}" in skill for i in ["一", "二", "三", "四", "五", "六", "七", "八", "九"]))
 check("包含门店推荐场景", "门店位置推荐" in skill or "智能推荐" in skill)
 check("包含价格声明", "参考价" in skill)
