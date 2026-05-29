@@ -1,0 +1,45 @@
+name: Build and Release Skill
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run tests
+        run: python scripts/test_skill.py
+
+      - name: Package skill
+        run: |
+          mkdir -p dist
+          zip -r dist/nanchang-carpoly-v${{ github.ref_name }}.skill \
+            SKILL.md \
+            references/ \
+            README.md \
+            version.json \
+            CHANGELOG.md \
+            install.sh \
+            install.ps1 \
+            -x "*.pyc" "__pycache__/*"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "南昌嘉宝莉 Skill ${{ github.ref_name }}"
+          body: "See CHANGELOG.md for details."
+          files: dist/nanchang-carpoly-v${{ github.ref_name }}.skill
+          generate_release_notes: true
